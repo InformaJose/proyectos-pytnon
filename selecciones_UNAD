@@ -1,0 +1,249 @@
+#Nombre:
+#Grupo:
+#Programa:
+#Centro:
+
+'''
+La Universidad UNAD desea llevar un registro de 5 estudiantes deportistas vinculados a las selecciones de la universidad.
+Existen 3 selecciones:
+_____________________________________
+| Código     | Nombre                |
+|------------|-----------------------|
+|  1015      |      Futbol           |
+|  1030      |    Baloncesto         |
+|  1045      |    Ciclismo           |
+ ----------------------------------   
+De cada estudiante se conoce:
+> Nombre.
+> Cedula.
+> Sexo (1 Hombre, 2 Mujer).
+> Edad.
+> Código de la Selección a la que pertenece.
+
+Realice las siguientes funciones:
+
+>> Información de la matriz.
+
+>> Determine el porcentaje de Hombres y mujeres.
+
+>> El nombre del estudiante más joven a que selección pertenece
+
+>> Determine el número de deportistas por selección.
+
+
+'''
+
+def creamatriz():
+    datos = []
+    for i in range(100):
+        datos.append([0,0,0,0,''] )
+    return datos
+
+
+# ----------------------------------
+def llenar(d, n):
+    print('''
+╔════════════════════════════════════════════════════╗
+║ RECOLECCIÓN DE INFORMACIÓN DE LOS ESTUDIANTES      ║
+║ DE LAS SELECCIONES DE LA UNIVERSIDAD UNAD          ║
+╚════════════════════════════════════════════════════╝
+''')
+
+    for i in range(n):
+
+        # VALIDAR NOMBRE
+        while True:
+            nombre = input(f"\n> Nombre del estudiante No {i+1}: ").strip()
+            if nombre.replace(" ", "").isalpha():
+                d[i][4] = nombre.upper()
+                break
+            else:
+                print("Error: ingrese solo letras.")
+
+        # VALIDAR CÉDULA
+        while True:
+            try:
+                d[i][0] = int(input("> Número de cédula: "))
+                if d[i][0] > 0:
+                    break
+                else:
+                    print("Error: la cédula debe ser positiva.")
+            except ValueError:
+                print("Error: ingrese números.")
+
+        # VALIDAR SEXO
+        while True:
+            try:
+                d[i][1] = int(input("> Sexo (1.Hombre, 2.Mujer): "))
+                if d[i][1] in [1, 2]:
+                    break
+                else:
+                    print("Error: ingrese 1 o 2.")
+            except ValueError:
+                print("Error: dato inválido.")
+
+        # VALIDAR EDAD
+        while True:
+            try:
+                d[i][2] = int(input("> Edad: "))
+                if d[i][2] > 0:
+                    break
+                else:
+                    print("Error: edad mayor a 0.")
+            except ValueError:
+                print("Error: ingrese números.")
+
+        # VALIDAR SELECCIÓN
+        while True:
+            try:
+                d[i][3] = int(input("> Código selección (1015,1030,1045): "))
+                if d[i][3] in [1015, 1030, 1045]:
+                    break
+                else:
+                    print("Código inválido.")
+            except ValueError:
+                print("Error: ingrese números.")
+
+
+# ----------------------------------
+def imprimir(d, n):
+    print('''
+╔════════════════════════════════════════════════════════════════════════════════╗
+║          MATRIZ DE ESTUDIANTES                                                 ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+╔════╦══════════════════════╦════════════╦══════════╦════════╦═══════════════════╗
+║ No ║ Nombre               ║ Cédula     ║ Sexo     ║ Edad   ║ Selección         ║
+╠════╬══════════════════════╬════════════╬══════════╬════════╬═══════════════════╣''')
+
+    for i in range(n):
+
+        sexo = "Hombre" if d[i][1] == 1 else "Mujer"
+
+        if d[i][3] == 1015:
+            seleccion = "Fútbol"
+        elif d[i][3] == 1030:
+            seleccion = "Baloncesto"
+        else:
+            seleccion = "Ciclismo"
+
+        print(f"║ {i+1:2} ║ {d[i][4]:20} ║ {d[i][0]:10} ║ {sexo:8} ║ {d[i][2]:6} ║ {seleccion:17} ║")
+
+    print("╚════╩══════════════════════╩════════════╩══════════╩════════╩═══════════════════╝")
+
+
+# ----------------------------------
+def porsex(d, n):
+    homb = 0
+
+    for i in range(n):
+        if d[i][1] == 1:
+            homb += 1
+
+    homb = (homb / n) * 100
+    muj = 100 - homb
+
+    print(f"\nMujeres: {muj:.2f}%")
+    print(f"Hombres: {homb:.2f}%")
+
+
+# ----------------------------------
+def masjov(d,  n):
+    jov = d[0][2]
+
+    for i in range(1, n):
+        if d[i][2] < jov:
+            jov = d[i][2]
+
+    print(f"\nEdad mínima: {jov}")
+    print("Deportistas más jóvenes:")
+
+    for i in range(n):
+        if d[i][2] == jov:
+            print(d[i][4])
+
+
+# ----------------------------------
+def estxsel(d, n):
+    futbol = 0
+    baloncesto = 0
+    ciclismo = 0
+
+    for i in range(n):
+        if d[i][3] == 1015:
+            futbol += 1
+        elif d[i][3] == 1030:
+            baloncesto += 1
+        else:
+            ciclismo += 1
+
+    print("\nCantidad por selección")
+    print("Fútbol:", futbol)
+    print("Baloncesto:", baloncesto)
+    print("Ciclismo:", ciclismo)
+
+
+# ----------------------------------
+def menu():
+    print('''
+╔════════════════════════════════════╗
+║        MENÚ PRINCIPAL              ║
+╠════════════════════════════════════╣
+║ 1. Imprimir matriz                 ║
+║ 2. Porcentaje por sexo             ║
+║ 3. Deportista(s) más joven(es)     ║
+║ 4. Estudiantes por selección       ║
+║ 5. Salir                           ║
+╚════════════════════════════════════╝
+''')
+
+    while True:
+        try:
+            op = int(input("Seleccione opción: "))
+            if 1 <= op <= 5:
+                return op
+            else:
+                print("Ingrese opción entre 1 y 5.")
+        except ValueError:
+            print("Ingrese números.")
+
+
+# ----------------------------------
+def principal():
+    print("PROGRAMA DE SELECCIONES UNIVERSITARIAS")
+
+    while True:
+        try:
+            n = int(input("Ingrese cantidad de estudiantes (1-100): "))
+            if 1 <= n <= 100:
+                break
+            else:
+                print("Debe estar entre 1 y 100.")
+        except ValueError:
+            print("Dato inválido.")
+
+    datos = creamatriz()
+    llenar(datos, n)
+
+    while True:
+        opcion = menu()
+
+        if opcion == 1:
+            imprimir(datos, n)
+
+        elif opcion == 2:
+            porsex(datos, n)
+
+        elif opcion == 3:
+            masjov(datos, n)
+
+        elif opcion == 4:
+            estxsel(datos, n)
+
+        elif opcion == 5:
+            print("Programa finalizado.")
+            break
+
+
+# ----------------------------------
+if __name__ == "__main__":
+    principal()
